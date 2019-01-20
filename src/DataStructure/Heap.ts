@@ -100,15 +100,11 @@ export class MaxHeap<E> {
  */
 export class MinHeap<E> {
   private data: _Array<E>
+  private comparator: (e1: E, e2: E) => number
 
-  constructor(arg?: number | E[]) {
-    if (typeof arg === 'object') {
-      this.data = new _Array<E>(arg)
-      // heapify
-      for (let i = this.parent(arg.length - 1); i >= 0; i--) this.shiftDown(i)
-    } else {
-      this.data = new _Array<E>(arg)
-    }
+  constructor(comparator: (e1: E, e2: E) => number) {
+    this.data = new _Array<E>()
+    this.comparator = comparator
   }
 
   private parent(index: number): number {
@@ -120,13 +116,13 @@ export class MinHeap<E> {
   private leftChild(index: number): number {
     return index * 2 + 1
   }
-  
+
   private rightChild(index: number): number {
     return index * 2 + 2
   }
 
   private shiftUp(k: number): void {
-    while (k > 0 && this.data.get(k) < this.data.get(this.parent(k))) {
+    while (k > 0 && this.comparator(this.data.get(k), this.data.get(this.parent(k))) === -1) {
       this.data.swap(k, this.parent(k))
       k = this.parent(k)
     }
@@ -136,14 +132,21 @@ export class MinHeap<E> {
     while (this.leftChild(k) < this.data.getSize()) {
       let j = this.leftChild(k)
 
-      if (j + 1 < this.data.getSize() && this.data.get(j + 1) < this.data.get(j)) {
+      if (j + 1 < this.data.getSize() && this.comparator(this.data.get(j + 1), this.data.get(j)) === -1)
         j = this.rightChild(k)
-      }
-      if (this.data.get(k) < this.data.get(j)) break
+      if (this.comparator(this.data.get(k), this.data.get(j)) === -1) break
 
       this.data.swap(k, j)
       k = j
     }
+  }
+
+  private findIndex(e: E): number {
+    for (let i = 0; i < this.data.getSize(); i++) {
+      if (this.data.get(i) === e) return i
+    }
+
+    return -1
   }
 
   public size(): number {
@@ -177,12 +180,14 @@ export class MinHeap<E> {
     return ret
   }
 
-  public repalce(e: E): E {
-    const ret = this.findMin()
+  public change(oldE: E, newE: E): void {
+    const index = this.findIndex(oldE)
 
-    this.data.set(0, e)
+    if (index === -1) throw new Error(`${oldE} doesn't exist!`)
+
+    this.data.set(index, newE)
+    this.data.swap(0, index)
+    this.shiftUp(index)
     this.shiftDown(0)
-
-    return ret
   }
 }

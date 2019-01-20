@@ -1,4 +1,4 @@
-import { BST } from './BST'
+import { BST } from './BinarySearchTree'
 import { LinkedList } from './LinkedList'
 
 /**

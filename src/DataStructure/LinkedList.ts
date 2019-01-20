@@ -1,11 +1,11 @@
 /**
  * @description 单向链表节点
  */
-export class _Node<E> {
+export class LinkedListNode<E> {
   e: E | null
-  next: _Node<E> | null
+  next: LinkedListNode<E> | null
 
-  constructor(e: E | null, next: _Node<E> | null = null) {
+  constructor(e: E | null, next: LinkedListNode<E> | null = null) {
     this.e = e
     this.next = next
   }
@@ -14,12 +14,16 @@ export class _Node<E> {
 /**
  * @description 双向链表节点
  */
-export class _DoublyNode<E> {
+export class DoublyLinkedListNode<E> {
   e: E | null
-  next: _DoublyNode<E> | null
-  prev: _DoublyNode<E> | null
+  next: DoublyLinkedListNode<E> | null
+  prev: DoublyLinkedListNode<E> | null
 
-  constructor(e: E | null, next: _DoublyNode<E> | null = null, prev: _DoublyNode<E> | null = null) {
+  constructor(
+    e: E | null,
+    next: DoublyLinkedListNode<E> | null = null,
+    prev: DoublyLinkedListNode<E> | null = null
+  ) {
     this.e = e
     this.next = next
     this.prev = prev
@@ -30,11 +34,11 @@ export class _DoublyNode<E> {
  * @description 单向链表
  */
 export class LinkedList<E> {
-  private dummyHead: _Node<E>
+  private dummyHead: LinkedListNode<E>
   private size: number
 
   constructor() {
-    this.dummyHead = new _Node<E>(null, null)
+    this.dummyHead = new LinkedListNode<E>(null, null)
     this.size = 0
   }
 
@@ -51,13 +55,13 @@ export class LinkedList<E> {
       throw new Error('Add failed. Illegal index.')
     }
 
-    let prev: _Node<E> = this.dummyHead
+    let prev: LinkedListNode<E> = this.dummyHead
 
     for (let i = 0; i < index; i++) {
-      prev = prev.next as _Node<E>
+      prev = prev.next as LinkedListNode<E>
     }
 
-    prev.next = new _Node<E>(e, prev.next)
+    prev.next = new LinkedListNode<E>(e, prev.next)
     this.size++
   }
 
@@ -74,10 +78,10 @@ export class LinkedList<E> {
       throw new Error('Get failed. Illegal index.')
     }
 
-    let cur: _Node<E> = this.dummyHead.next as _Node<E>
+    let cur: LinkedListNode<E> = this.dummyHead.next as LinkedListNode<E>
 
     for (let i = 0; i < index; i++) {
-      cur = cur.next as _Node<E>
+      cur = cur.next as LinkedListNode<E>
     }
 
     return cur.e as E
@@ -96,17 +100,17 @@ export class LinkedList<E> {
       throw new Error('Get failed. Illegal index.')
     }
 
-    let cur: _Node<E> = this.dummyHead.next as _Node<E>
+    let cur: LinkedListNode<E> = this.dummyHead.next as LinkedListNode<E>
 
     for (let i = 0; i < index; i++) {
-      cur = cur.next as _Node<E>
+      cur = cur.next as LinkedListNode<E>
     }
 
     cur.e = e
   }
 
   public contains(e: E): boolean {
-    let cur: _Node<E> | null = this.dummyHead.next
+    let cur: LinkedListNode<E> | null = this.dummyHead.next
 
     while (cur !== null) {
       if (cur.e === e) {
@@ -124,13 +128,13 @@ export class LinkedList<E> {
       throw new Error('Get failed. Illegal index.')
     }
 
-    let prev: _Node<E> = this.dummyHead
+    let prev: LinkedListNode<E> = this.dummyHead
 
     for (let i = 0; i < index; i++) {
-      prev = prev.next as _Node<E>
+      prev = prev.next as LinkedListNode<E>
     }
 
-    const retNode: _Node<E> = prev.next as _Node<E>
+    const retNode: LinkedListNode<E> = prev.next as LinkedListNode<E>
     prev.next = retNode.next
     retNode.next = null
     this.size--
@@ -178,8 +182,8 @@ export class LinkedList<E> {
  * @description 双向链表
  */
 export class DoublyLinkedList<E> {
-  private head: _DoublyNode<E> | null
-  private tail: _DoublyNode<E> | null
+  private head: DoublyLinkedListNode<E> | null
+  private tail: DoublyLinkedListNode<E> | null
 
   constructor() {
     this.head = null
@@ -187,7 +191,7 @@ export class DoublyLinkedList<E> {
   }
 
   public prepend(e: E): void {
-    const newNode = new _DoublyNode<E>(e, this.head)
+    const newNode = new DoublyLinkedListNode<E>(e, this.head)
 
     if (this.head) {
       this.head.prev = newNode
@@ -200,7 +204,7 @@ export class DoublyLinkedList<E> {
   }
 
   public append(e: E): void {
-    const newNode = new _DoublyNode<E>(e)
+    const newNode = new DoublyLinkedListNode<E>(e)
 
     if (this.tail) {
       this.tail.next = newNode
@@ -238,7 +242,7 @@ export class DoublyLinkedList<E> {
       this.tail = null
     } else {
       this.tail = this.tail.prev
-      ;(this.tail as _DoublyNode<E>).next = null
+      ;(this.tail as DoublyLinkedListNode<E>).next = null
     }
 
     return deleteTail.e
@@ -247,8 +251,8 @@ export class DoublyLinkedList<E> {
   public delete(e: E): void {
     if (!this.head) return
 
-    let deleteNode: _DoublyNode<E> | null = null
-    let currentNode: _DoublyNode<E> | null = this.head
+    let deleteNode: DoublyLinkedListNode<E> | null = null
+    let currentNode: DoublyLinkedListNode<E> | null = this.head
 
     while (currentNode) {
       if (currentNode.e === e) {
@@ -259,8 +263,10 @@ export class DoublyLinkedList<E> {
         } else {
           deleteNode = currentNode
 
-          const prevNode: _DoublyNode<E> = (deleteNode as _DoublyNode<E>).prev as _DoublyNode<E>
-          const nextNode: _DoublyNode<E> = (deleteNode as _DoublyNode<E>).next as _DoublyNode<E>
+          const prevNode: DoublyLinkedListNode<E> = (deleteNode as DoublyLinkedListNode<E>)
+            .prev as DoublyLinkedListNode<E>
+          const nextNode: DoublyLinkedListNode<E> = (deleteNode as DoublyLinkedListNode<E>)
+            .next as DoublyLinkedListNode<E>
 
           prevNode.next = nextNode
           nextNode.prev = prevNode
@@ -273,7 +279,7 @@ export class DoublyLinkedList<E> {
 
   public toString(): string {
     let contentMsg: string = ''
-    let current: _Node<E> | null = this.head
+    let current: LinkedListNode<E> | null = this.head
 
     while (current) {
       contentMsg += `${current.e} <-> `
@@ -288,7 +294,7 @@ export class DoublyLinkedList<E> {
  * @description 单向循环链表
  */
 export class CircularLinkedList<E> {
-  private head: _Node<E> | null
+  private head: LinkedListNode<E> | null
   private size: number
 
   constructor() {
@@ -305,16 +311,16 @@ export class CircularLinkedList<E> {
   }
 
   public append(e: E): void {
-    const newNode = new _Node<E>(e)
+    const newNode = new LinkedListNode<E>(e)
 
     if (!this.head) {
       this.head = newNode
       this.head.next = this.head
       this.size++
     } else {
-      let current: _Node<E> = this.head
+      let current: LinkedListNode<E> = this.head
       while (current.next !== this.head) {
-        current = current.next as _Node<E>
+        current = current.next as LinkedListNode<E>
       }
 
       current.next = newNode
@@ -327,12 +333,12 @@ export class CircularLinkedList<E> {
   public remove(): E | null {
     if (!this.head) return null
 
-    let current: _Node<E> = this.head
+    let current: LinkedListNode<E> = this.head
     while (current.next !== this.head) {
-      current = current.next as _Node<E>
+      current = current.next as LinkedListNode<E>
     }
 
-    const retNode: _Node<E> = this.head
+    const retNode: LinkedListNode<E> = this.head
 
     this.head = this.head.next
     current.next = this.head
@@ -345,7 +351,7 @@ export class CircularLinkedList<E> {
     if (!this.head) return '-> ->'
 
     let contentMsg: string = ''
-    let current: _Node<E> | null = this.head.next
+    let current: LinkedListNode<E> | null = this.head.next
 
     while (current && current !== this.head) {
       contentMsg += `${current.e} -> `

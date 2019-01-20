@@ -1,6 +1,5 @@
 import { _Array } from './Array'
-import { _Node } from './LinkedList'
-import { MaxHeap } from './Heap'
+import { LinkedListNode } from './LinkedList'
 
 /**
  * @description 队列的接口方法
@@ -158,8 +157,8 @@ export class LoopQueue<E> implements Queue<E> {
  * @description 使用链表来实现队列
  */
 class LinkedListQueue<E> implements Queue<E> {
-  private head: _Node<E> | null
-  private tail: _Node<E> | null
+  private head: LinkedListNode<E> | null
+  private tail: LinkedListNode<E> | null
   private size: number
 
   constructor() {
@@ -178,10 +177,10 @@ class LinkedListQueue<E> implements Queue<E> {
 
   public enqueue(e: E): void {
     if (this.tail === null) {
-      this.tail = new _Node<E>(e, null)
+      this.tail = new LinkedListNode<E>(e, null)
       this.head = this.tail
     } else {
-      this.tail.next = new _Node<E>(e, null)
+      this.tail.next = new LinkedListNode<E>(e, null)
       this.tail = this.tail.next
     }
 
@@ -193,9 +192,9 @@ class LinkedListQueue<E> implements Queue<E> {
       throw new Error('Cannot dequeue from an empty queue.')
     }
 
-    const retNode: _Node<E> = <_Node<E>>this.head
+    const retNode: LinkedListNode<E> = <LinkedListNode<E>>this.head
 
-    this.head = (<_Node<E>>this.head).next
+    this.head = (<LinkedListNode<E>>this.head).next
     retNode.next = null
 
     if (this.head === null) this.tail = null
@@ -209,7 +208,7 @@ class LinkedListQueue<E> implements Queue<E> {
       throw new Error('Queue is empty.')
     }
 
-    return (<_Node<E>>this.head).e as E
+    return (<LinkedListNode<E>>this.head).e as E
   }
 
   public toString(): string {
@@ -222,37 +221,6 @@ class LinkedListQueue<E> implements Queue<E> {
     }
 
     return `Queue: front ${contentMsg} NULL tail`
-  }
-}
-
-/**
- * @description 基于堆的优先队列
- */
-export class HeapPriorityQueue<E> implements Queue<E> {
-  private maxHeap: MaxHeap<E>
-
-  constructor() {
-    this.maxHeap = new MaxHeap<E>()
-  }
-
-  public getSize(): number {
-    return this.maxHeap.size()
-  }
-
-  public isEmpty(): boolean {
-    return this.maxHeap.isEmpty()
-  }
-
-  public getFront(): E {
-    return this.maxHeap.findMax()
-  }
-
-  public enqueue(e: E): void {
-    this.maxHeap.add(e)
-  }
-
-  public dequeue(): E {
-    return this.maxHeap.extractMax()
   }
 }
 

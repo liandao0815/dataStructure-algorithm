@@ -3,7 +3,7 @@ import { ArrayQueue } from './Queue'
 /**
  * @description 图的边类
  */
-class Edge<E> {
+export class GraphEdge<E> {
   value: E
   weight: number // 权重
 
@@ -83,17 +83,17 @@ export class AMGraph<E> {
  */
 export class ATGraph<E> {
   private vertices: Set<E>
-  private adjTable: Map<E, Edge<E>[]>
+  private adjTable: Map<E, GraphEdge<E>[]>
   private isDirected: boolean
 
   constructor(isDirected: boolean = false) {
     this.vertices = new Set<E>()
-    this.adjTable = new Map<E, Edge<E>[]>()
+    this.adjTable = new Map<E, GraphEdge<E>[]>()
     this.isDirected = isDirected
   }
 
   private _dfs(startVertex: E, visitedVertices: E[]): void {
-    const neighbors = this.adjTable.get(startVertex) as Edge<E>[]
+    const neighbors = this.adjTable.get(startVertex) as GraphEdge<E>[]
     visitedVertices.push(startVertex)
 
     for (let i = 0; i < neighbors.length; i++) {
@@ -109,7 +109,7 @@ export class ATGraph<E> {
     this.vertices.add(e)
 
     if (this.adjTable.has(e)) return
-    else this.adjTable.set(e, new Array<Edge<E>>())
+    else this.adjTable.set(e, new Array<GraphEdge<E>>())
   }
 
   public addEdge(vertexA: E, vertexB: E, weight: number = 1): void {
@@ -117,13 +117,13 @@ export class ATGraph<E> {
       throw new Error(`${vertexA} or ${vertexB} doesn't exist!`)
     }
 
-    const edgeA = new Edge<E>(vertexA, weight)
-    const edgeB = new Edge<E>(vertexB, weight)
+    const edgeA = new GraphEdge<E>(vertexA, weight)
+    const edgeB = new GraphEdge<E>(vertexB, weight)
 
     if (!this.isDirected) {
-      ;(this.adjTable.get(vertexB) as Array<Edge<E>>).push(edgeA)
+      ;(this.adjTable.get(vertexB) as Array<GraphEdge<E>>).push(edgeA)
     }
-    ;(this.adjTable.get(vertexA) as Array<Edge<E>>).push(edgeB)
+    ;(this.adjTable.get(vertexA) as Array<GraphEdge<E>>).push(edgeB)
   }
 
   // 广度优先遍历（breadthFirstSearch）
@@ -138,7 +138,7 @@ export class ATGraph<E> {
 
     while (!queue.isEmpty()) {
       const vertex = queue.dequeue()
-      const neighbors = this.adjTable.get(vertex) as Edge<E>[]
+      const neighbors = this.adjTable.get(vertex) as GraphEdge<E>[]
 
       for (let i = 0; i < neighbors.length; i++) {
         const currentVertex = neighbors[i].value
@@ -169,7 +169,7 @@ export class ATGraph<E> {
     this.vertices.forEach(e => {
       str += `${e} -> `
 
-      const neighbors = this.adjTable.get(e) as Edge<E>[]
+      const neighbors = this.adjTable.get(e) as GraphEdge<E>[]
       neighbors.forEach(e => (str += `${e} `))
 
       str += '\n'
