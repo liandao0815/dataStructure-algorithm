@@ -11,6 +11,9 @@ export class TrieNode {
   }
 }
 
+/**
+ * @description Trie 字典树
+ */
 export class Trie {
   private root: TrieNode
   private size: number
