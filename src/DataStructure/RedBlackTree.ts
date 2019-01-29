@@ -2,7 +2,7 @@ const RED = true
 const BLACK = false
 
 /**
- * @description
+ * @description 红黑树
  */
 export class RBTreeNode<E> {
   value: E
